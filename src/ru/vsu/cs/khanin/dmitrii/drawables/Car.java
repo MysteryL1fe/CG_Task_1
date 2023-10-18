@@ -1,21 +1,67 @@
+package ru.vsu.cs.khanin.dmitrii.drawables;
+
+import ru.vsu.cs.khanin.dmitrii.Drawable;
+
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Arc2D;
 import java.awt.geom.Rectangle2D;
 
-public class Car {
-    private final int X, Y, CAR_WIDTH, CAR_HEIGHT, WIDTH, HEIGHT;
-    private final double ANGLE;
+public class Car implements Drawable {
+    private int x, y, width, height;
+    private double angle;
 
-    public Car(int x, int y, int carWidth, int carHeight, double angle, int width, int height, Graphics2D g2d) {
-        X = x;
-        Y = y;
-        CAR_WIDTH = carWidth;
-        CAR_HEIGHT = carHeight;
-        ANGLE = angle;
-        WIDTH = width;
-        HEIGHT = height;
+    public Car(int x, int y, int width, int height, double angle) {
+        setX(x);
+        setY(y);
+        setWidth(width);
+        setHeight(height);
+        setAngle(angle);
+    }
 
+    public int getX() {
+        return x;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
+    public double getAngle() {
+        return angle;
+    }
+
+    public void setAngle(double angle) {
+        angle %= Math.PI;
+        this.angle = angle;
+    }
+
+    public void paint(Graphics g) {
+        Graphics2D g2d = (Graphics2D) g;
         paintFrame(g2d);
         paintWheels(g2d);
         paintGlasses(g2d);
@@ -33,11 +79,11 @@ public class Car {
 
     private void paintSide(Graphics2D g2d) {
         Rectangle2D side = new Rectangle2D.Double(
-                X, Y, CAR_WIDTH * Math.cos(ANGLE), CAR_HEIGHT / 2. * Math.cos(ANGLE)
+                x, y, width * Math.cos(angle), height / 2. * Math.cos(angle)
         );
 
         AffineTransform transform = new AffineTransform();
-        transform.rotate(ANGLE, X, Y);
+        transform.rotate(angle, x, y);
 
         Shape rotatedSide = transform.createTransformedShape(side);
         g2d.setColor(Color.BLUE);
@@ -45,16 +91,16 @@ public class Car {
     }
 
     private void paintBack(Graphics2D g2d) {
-        double backPivotX = X + CAR_WIDTH * Math.pow(Math.cos(ANGLE), 2);
-        double backPivotY = Y + CAR_WIDTH * Math.cos(ANGLE) * Math.sin(ANGLE);
+        double backPivotX = x + width * Math.pow(Math.cos(angle), 2);
+        double backPivotY = y + width * Math.cos(angle) * Math.sin(angle);
 
         Rectangle2D back = new Rectangle2D.Double(
                 backPivotX, backPivotY,
-                CAR_WIDTH / 3. * Math.sin(ANGLE), CAR_HEIGHT / 2. * Math.sin(ANGLE)
+                width / 3. * Math.sin(angle), height / 2. * Math.sin(angle)
         );
 
         AffineTransform transform = new AffineTransform();
-        transform.rotate(-(Math.PI / 2 - ANGLE), backPivotX, backPivotY);
+        transform.rotate(-(Math.PI / 2 - angle), backPivotX, backPivotY);
 
         Shape rotatedBack = transform.createTransformedShape(back);
         g2d.setColor(Color.BLUE);
@@ -62,10 +108,10 @@ public class Car {
     }
 
     private void paintArc(Graphics2D g2d) {
-        double arcWidth = CAR_HEIGHT * Math.cos(ANGLE);
-        double arcHeight = CAR_HEIGHT * Math.sin(ANGLE);
-        double arcPivotX = X + CAR_WIDTH * Math.pow(Math.cos(ANGLE), 2) - arcWidth / 2;
-        double arcPivotY = Y + CAR_WIDTH * Math.cos(ANGLE) * Math.sin(ANGLE) - arcHeight / 2;
+        double arcWidth = height * Math.cos(angle);
+        double arcHeight = height * Math.sin(angle);
+        double arcPivotX = x + width * Math.pow(Math.cos(angle), 2) - arcWidth / 2;
+        double arcPivotY = y + width * Math.cos(angle) * Math.sin(angle) - arcHeight / 2;
 
         Arc2D arc = new Arc2D.Double(
                 arcPivotX, arcPivotY,
@@ -74,7 +120,7 @@ public class Car {
 
         AffineTransform transform = new AffineTransform();
         transform.rotate(
-                -(Math.PI / 2 - ANGLE), arcPivotX + arcWidth / 2, arcPivotY + arcHeight / 2
+                -(Math.PI / 2 - angle), arcPivotX + arcWidth / 2, arcPivotY + arcHeight / 2
         );
 
         Shape rotatedArc = transform.createTransformedShape(arc);
@@ -84,11 +130,11 @@ public class Car {
 
     private void paintBonnet(Graphics2D g2d) {
         Rectangle2D rect = new Rectangle2D.Double(
-                X, Y, CAR_WIDTH / 3. * Math.sin(ANGLE), CAR_WIDTH * Math.cos(ANGLE)
+                x, y, width / 3. * Math.sin(angle), width * Math.cos(angle)
         );
 
         AffineTransform transform = new AffineTransform();
-        transform.rotate(-(Math.PI / 2 - ANGLE), X, Y);
+        transform.rotate(-(Math.PI / 2 - angle), x, y);
 
         Shape rotatedRect = transform.createTransformedShape(rect);
         g2d.setColor(Color.BLUE);
@@ -96,10 +142,10 @@ public class Car {
     }
 
     private void paintUpperArc(Graphics2D g2d) {
-        double arcWidth = CAR_WIDTH * 0.75 * Math.cos(ANGLE);
-        double arcHeight = CAR_HEIGHT * Math.cos(ANGLE);
-        double arcPivotX = X + CAR_WIDTH / 6. * Math.cos(ANGLE) * Math.cos(ANGLE);
-        double arcPivotY = Y - arcHeight / 2 + CAR_WIDTH / 6. * Math.sin(ANGLE) * Math.cos(ANGLE);
+        double arcWidth = width * 0.75 * Math.cos(angle);
+        double arcHeight = height * Math.cos(angle);
+        double arcPivotX = x + width / 6. * Math.cos(angle) * Math.cos(angle);
+        double arcPivotY = y - arcHeight / 2 + width / 6. * Math.sin(angle) * Math.cos(angle);
 
         {
             Arc2D arc = new Arc2D.Double(
@@ -109,7 +155,7 @@ public class Car {
 
             AffineTransform transform = new AffineTransform();
             transform.rotate(
-                    ANGLE, arcPivotX, arcPivotY + arcHeight / 2
+                    angle, arcPivotX, arcPivotY + arcHeight / 2
             );
 
             Shape rotatedArc = transform.createTransformedShape(arc);
@@ -118,12 +164,12 @@ public class Car {
         }
 
         {
-            arcPivotX += CAR_WIDTH / 3. * Math.sin(ANGLE) * Math.sin(ANGLE);
-            arcPivotY -= CAR_WIDTH / 3. * Math.sin(ANGLE) * Math.cos(ANGLE);
+            arcPivotX += width / 3. * Math.sin(angle) * Math.sin(angle);
+            arcPivotY -= width / 3. * Math.sin(angle) * Math.cos(angle);
 
             AffineTransform transform = new AffineTransform();
             transform.rotate(
-                    ANGLE, arcPivotX, arcPivotY + arcHeight / 2
+                    angle, arcPivotX, arcPivotY + arcHeight / 2
             );
 
             Arc2D arc = new Arc2D.Double(
@@ -140,29 +186,29 @@ public class Car {
         }
 
         g2d.drawLine(
-                (int) (X + CAR_WIDTH / 6. * Math.cos(ANGLE) * Math.cos(ANGLE)),
-                (int) (Y + CAR_WIDTH / 6. * Math.sin(ANGLE) * Math.cos(ANGLE)),
+                (int) (x + width / 6. * Math.cos(angle) * Math.cos(angle)),
+                (int) (y + width / 6. * Math.sin(angle) * Math.cos(angle)),
                 (int) arcPivotX, (int) (arcPivotY + arcHeight / 2)
         );
 
         g2d.drawLine(
-                (int) (X + CAR_WIDTH / 6. * Math.cos(ANGLE) * Math.cos(ANGLE) + arcWidth * Math.cos(ANGLE)),
-                (int) (Y + CAR_WIDTH / 6. * Math.sin(ANGLE) * Math.cos(ANGLE) + arcWidth * Math.sin(ANGLE)),
-                (int) (arcPivotX + arcWidth * Math.cos(ANGLE)),
-                (int) (arcPivotY + arcHeight / 2 + arcWidth * Math.sin(ANGLE))
+                (int) (x + width / 6. * Math.cos(angle) * Math.cos(angle) + arcWidth * Math.cos(angle)),
+                (int) (y + width / 6. * Math.sin(angle) * Math.cos(angle) + arcWidth * Math.sin(angle)),
+                (int) (arcPivotX + arcWidth * Math.cos(angle)),
+                (int) (arcPivotY + arcHeight / 2 + arcWidth * Math.sin(angle))
         );
     }
 
     private void paintWheels(Graphics2D g2d) {
-        double wheelsRadius = CAR_HEIGHT / 2. * Math.cos(ANGLE);
-        double leftWheelPivotX = X - CAR_HEIGHT / 2. * Math.cos(ANGLE) * Math.sin(ANGLE)
-                + CAR_WIDTH / 5. * Math.cos(ANGLE) * Math.cos(ANGLE) - wheelsRadius / 2;
-        double leftWheelPivotY = Y + CAR_HEIGHT / 2. * Math.cos(ANGLE) * Math.cos(ANGLE)
-                + CAR_WIDTH / 5. * Math.cos(ANGLE) * Math.sin(ANGLE) - wheelsRadius / 2;
-        double rightWheelPivotX = X - CAR_HEIGHT / 2. * Math.cos(ANGLE) * Math.sin(ANGLE)
-                + CAR_WIDTH * 0.8 * Math.cos(ANGLE) * Math.cos(ANGLE) - wheelsRadius / 2;
-        double rightWheelPivotY = Y + CAR_HEIGHT / 2. * Math.cos(ANGLE) * Math.cos(ANGLE)
-                + CAR_WIDTH * 0.8 * Math.cos(ANGLE) * Math.sin(ANGLE) - wheelsRadius / 2;
+        double wheelsRadius = height / 2. * Math.cos(angle);
+        double leftWheelPivotX = x - height / 2. * Math.cos(angle) * Math.sin(angle)
+                + width / 5. * Math.cos(angle) * Math.cos(angle) - wheelsRadius / 2;
+        double leftWheelPivotY = y + height / 2. * Math.cos(angle) * Math.cos(angle)
+                + width / 5. * Math.cos(angle) * Math.sin(angle) - wheelsRadius / 2;
+        double rightWheelPivotX = x - height / 2. * Math.cos(angle) * Math.sin(angle)
+                + width * 0.8 * Math.cos(angle) * Math.cos(angle) - wheelsRadius / 2;
+        double rightWheelPivotY = y + height / 2. * Math.cos(angle) * Math.cos(angle)
+                + width * 0.8 * Math.cos(angle) * Math.sin(angle) - wheelsRadius / 2;
 
         g2d.setColor(Color.BLACK);
         g2d.fillOval((int) leftWheelPivotX, (int) leftWheelPivotY, (int) wheelsRadius, (int) wheelsRadius);
@@ -170,13 +216,13 @@ public class Car {
 
         g2d.setColor(Color.WHITE);
         g2d.fillOval(
-                (int) (leftWheelPivotX + wheelsRadius * 0.2 * Math.cos(ANGLE)),
-                (int) (leftWheelPivotY + wheelsRadius * 0.2 * Math.cos(ANGLE)),
+                (int) (leftWheelPivotX + wheelsRadius * 0.2 * Math.cos(angle)),
+                (int) (leftWheelPivotY + wheelsRadius * 0.2 * Math.cos(angle)),
                 (int) (wheelsRadius * 0.6), (int) (wheelsRadius * 0.6)
         );
         g2d.fillOval(
-                (int) (rightWheelPivotX + wheelsRadius * 0.2 * Math.cos(ANGLE)),
-                (int) (rightWheelPivotY + wheelsRadius * 0.2 * Math.cos(ANGLE)),
+                (int) (rightWheelPivotX + wheelsRadius * 0.2 * Math.cos(angle)),
+                (int) (rightWheelPivotY + wheelsRadius * 0.2 * Math.cos(angle)),
                 (int) (wheelsRadius * 0.6), (int) (wheelsRadius * 0.6)
         );
 
@@ -185,10 +231,10 @@ public class Car {
 
     private void paintGlasses(Graphics2D g2d) {
         {
-            double sideGlassWidth = CAR_WIDTH * 0.75 * Math.cos(ANGLE) * 0.75;
-            double sideGlassHeight = CAR_HEIGHT * Math.cos(ANGLE) * 0.75;
-            double sideGlassPivotX = X + CAR_WIDTH / 4. * Math.cos(ANGLE) * Math.cos(ANGLE);
-            double sideGlassPivotY = Y - sideGlassHeight / 2 + CAR_WIDTH / 5. * Math.sin(ANGLE) * Math.cos(ANGLE);
+            double sideGlassWidth = width * 0.75 * Math.cos(angle) * 0.75;
+            double sideGlassHeight = height * Math.cos(angle) * 0.75;
+            double sideGlassPivotX = x + width / 4. * Math.cos(angle) * Math.cos(angle);
+            double sideGlassPivotY = y - sideGlassHeight / 2 + width / 5. * Math.sin(angle) * Math.cos(angle);
 
             Arc2D sideGlass = new Arc2D.Double(
                     sideGlassPivotX, sideGlassPivotY,
@@ -197,7 +243,7 @@ public class Car {
 
             AffineTransform transform = new AffineTransform();
             transform.rotate(
-                    ANGLE, sideGlassPivotX, sideGlassPivotY + sideGlassHeight / 2
+                    angle, sideGlassPivotX, sideGlassPivotY + sideGlassHeight / 2
             );
 
             Shape rotatedSideGlass = transform.createTransformedShape(sideGlass);
@@ -206,11 +252,11 @@ public class Car {
         }
 
         {
-            double backGlassWidth = CAR_WIDTH * 0.2 * Math.sin(ANGLE);
-            double backGlassHeight = CAR_WIDTH * 2 / 9. * Math.sin(ANGLE);
-            double backGlassPivotX = X + CAR_WIDTH * 0.7 * Math.cos(ANGLE) * Math.cos(ANGLE)
-                    + CAR_WIDTH / 6. * Math.cos(ANGLE);
-            double backGlassPivotY = Y + CAR_WIDTH * 0.7 * Math.cos(ANGLE) * Math.sin(ANGLE);
+            double backGlassWidth = width * 0.2 * Math.sin(angle);
+            double backGlassHeight = width * 2 / 9. * Math.sin(angle);
+            double backGlassPivotX = x + width * 0.7 * Math.cos(angle) * Math.cos(angle)
+                    + width / 6. * Math.cos(angle);
+            double backGlassPivotY = y + width * 0.7 * Math.cos(angle) * Math.sin(angle);
 
             Rectangle2D backGlass = new Rectangle2D.Double(
                     backGlassPivotX, backGlassPivotY, backGlassWidth, backGlassHeight
@@ -218,7 +264,7 @@ public class Car {
 
             AffineTransform transform = new AffineTransform();
             transform.rotate(
-                    -(Math.PI * 5 / 6. - ANGLE), backGlassPivotX, backGlassPivotY
+                    -(Math.PI * 5 / 6. - angle), backGlassPivotX, backGlassPivotY
             );
 
             Shape rotatedBackGlass = transform.createTransformedShape(backGlass);
@@ -227,26 +273,26 @@ public class Car {
     }
 
     private void paintLights(Graphics2D g2d) {
-        double forwardLightWidth = CAR_WIDTH / 10. * Math.sin(ANGLE);
-        double forwardLightHeight = CAR_HEIGHT / 4. * Math.sin(ANGLE);
-        double leftLightPivotX = X + CAR_WIDTH * Math.pow(Math.cos(ANGLE), 2);
-        double leftLightPivotY = Y + CAR_WIDTH * Math.cos(ANGLE) * Math.sin(ANGLE);
+        double forwardLightWidth = width / 10. * Math.sin(angle);
+        double forwardLightHeight = height / 4. * Math.sin(angle);
+        double leftLightPivotX = x + width * Math.pow(Math.cos(angle), 2);
+        double leftLightPivotY = y + width * Math.cos(angle) * Math.sin(angle);
         {
             Rectangle2D leftLight = new Rectangle2D.Double(
                     leftLightPivotX, leftLightPivotY, forwardLightWidth, forwardLightHeight
             );
 
             AffineTransform transform = new AffineTransform();
-            transform.rotate(-(Math.PI / 2 - ANGLE), leftLightPivotX, leftLightPivotY);
+            transform.rotate(-(Math.PI / 2 - angle), leftLightPivotX, leftLightPivotY);
 
             Shape rotatedLeftLight = transform.createTransformedShape(leftLight);
             g2d.setColor(Color.RED);
             g2d.fill(rotatedLeftLight);
 
-            double arcWidth = CAR_HEIGHT / 4. * Math.cos(ANGLE);
-            double arcHeight = CAR_HEIGHT / 2. * Math.sin(ANGLE);
-            double arcPivotX = X + CAR_WIDTH * Math.pow(Math.cos(ANGLE), 2) - arcWidth / 2;
-            double arcPivotY = Y + CAR_WIDTH * Math.cos(ANGLE) * Math.sin(ANGLE) - arcHeight / 2;
+            double arcWidth = height / 4. * Math.cos(angle);
+            double arcHeight = height / 2. * Math.sin(angle);
+            double arcPivotX = x + width * Math.pow(Math.cos(angle), 2) - arcWidth / 2;
+            double arcPivotY = y + width * Math.cos(angle) * Math.sin(angle) - arcHeight / 2;
 
             Arc2D arc = new Arc2D.Double(
                     arcPivotX, arcPivotY,
@@ -255,7 +301,7 @@ public class Car {
 
             transform = new AffineTransform();
             transform.rotate(
-                    -(Math.PI / 2 - ANGLE), arcPivotX + arcWidth / 2, arcPivotY + arcHeight / 2
+                    -(Math.PI / 2 - angle), arcPivotX + arcWidth / 2, arcPivotY + arcHeight / 2
             );
 
             Shape rotatedArc = transform.createTransformedShape(arc);
@@ -267,7 +313,7 @@ public class Car {
             );
 
             transform = new AffineTransform();
-            transform.rotate(-(Math.PI / 2 - ANGLE), leftLightPivotX, leftLightPivotY);
+            transform.rotate(-(Math.PI / 2 - angle), leftLightPivotX, leftLightPivotY);
 
             Shape rotatedLeftYellowLight = transform.createTransformedShape(leftYellowLight);
             g2d.setColor(Color.YELLOW);
@@ -275,31 +321,31 @@ public class Car {
         }
 
         {
-            double rightLightPivotX = leftLightPivotX + CAR_WIDTH / 3. * Math.sin(ANGLE) * Math.sin(ANGLE)
-                    - forwardLightWidth * Math.sin(ANGLE);
-            double rightLightPivotY = leftLightPivotY - CAR_WIDTH / 3. * Math.sin(ANGLE) * Math.cos(ANGLE)
-                    + forwardLightWidth * Math.cos(ANGLE);
+            double rightLightPivotX = leftLightPivotX + width / 3. * Math.sin(angle) * Math.sin(angle)
+                    - forwardLightWidth * Math.sin(angle);
+            double rightLightPivotY = leftLightPivotY - width / 3. * Math.sin(angle) * Math.cos(angle)
+                    + forwardLightWidth * Math.cos(angle);
 
             Rectangle2D rightLight = new Rectangle2D.Double(
                     rightLightPivotX, rightLightPivotY, forwardLightWidth, forwardLightHeight
             );
 
             AffineTransform transform = new AffineTransform();
-            transform.rotate(-(Math.PI / 2 - ANGLE), rightLightPivotX, rightLightPivotY);
+            transform.rotate(-(Math.PI / 2 - angle), rightLightPivotX, rightLightPivotY);
 
             Shape rotatedRightLight = transform.createTransformedShape(rightLight);
             g2d.setColor(Color.RED);
             g2d.fill(rotatedRightLight);
 
-            rightLightPivotX += forwardLightWidth * Math.sin(ANGLE) / 2;
-            rightLightPivotY -= forwardLightWidth * Math.cos(ANGLE) / 2;
+            rightLightPivotX += forwardLightWidth * Math.sin(angle) / 2;
+            rightLightPivotY -= forwardLightWidth * Math.cos(angle) / 2;
 
             Rectangle2D rightYellowLight = new Rectangle2D.Double(
                     rightLightPivotX, rightLightPivotY, forwardLightWidth / 2, forwardLightHeight
             );
 
             transform = new AffineTransform();
-            transform.rotate(-(Math.PI / 2 - ANGLE), rightLightPivotX, rightLightPivotY);
+            transform.rotate(-(Math.PI / 2 - angle), rightLightPivotX, rightLightPivotY);
 
             Shape rotatedRightYellowLight = transform.createTransformedShape(rightYellowLight);
             g2d.setColor(Color.YELLOW);
@@ -307,25 +353,25 @@ public class Car {
         }
 
         {
-            forwardLightWidth = CAR_WIDTH / 10. * Math.cos(ANGLE);
-            forwardLightHeight = CAR_HEIGHT / 4. * Math.cos(ANGLE);
+            forwardLightWidth = width / 10. * Math.cos(angle);
+            forwardLightHeight = height / 4. * Math.cos(angle);
             Rectangle2D forwardLight = new Rectangle2D.Double(
-                    X, Y, forwardLightWidth, forwardLightHeight
+                    x, y, forwardLightWidth, forwardLightHeight
             );
 
             AffineTransform transform = new AffineTransform();
-            transform.rotate(ANGLE, X, Y);
+            transform.rotate(angle, x, y);
 
             Shape rotatedForwardLight = transform.createTransformedShape(forwardLight);
             g2d.setColor(Color.WHITE);
             g2d.fill(rotatedForwardLight);
 
             Rectangle2D forwardYellowLight = new Rectangle2D.Double(
-                    X, Y, forwardLightWidth / 2, forwardLightHeight
+                    x, y, forwardLightWidth / 2, forwardLightHeight
             );
 
             transform = new AffineTransform();
-            transform.rotate(ANGLE, X, Y);
+            transform.rotate(angle, x, y);
 
             Shape rotatedForwardYellowLight = transform.createTransformedShape(forwardYellowLight);
             g2d.setColor(Color.YELLOW);
@@ -339,8 +385,8 @@ public class Car {
         g2d.setColor(Color.RED);
         g2d.drawString(
                 "69",
-                (int) (X - CAR_HEIGHT / 3 * Math.sin(ANGLE) + CAR_WIDTH / 2 * Math.cos(ANGLE)),
-                (int) (Y + CAR_HEIGHT / 3 * Math.cos(ANGLE) + CAR_WIDTH / 2 * Math.sin(ANGLE))
+                (int) (x - height / 3 * Math.sin(angle) + width / 2 * Math.cos(angle)),
+                (int) (y + height / 3 * Math.cos(angle) + width / 2 * Math.sin(angle))
         );
     }
 }
