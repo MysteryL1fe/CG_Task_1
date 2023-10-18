@@ -6,33 +6,33 @@ import java.util.ArrayList;
 
 public class DrawingPanel extends JFrame {
     private final ArrayList<Drawable> drawableList = new ArrayList<>();
-    private final int WIDTH = 800;
-    private final int HEIGHT = 800;
-    private final int RAY_SPEED = 10;
-    private final double ROAD_ANGLE = Math.toRadians(30);
-    private final int CAR_WIDTH = 300;
-    private final int CAR_HEIGHT = 100;
-    private final int CAR_SPEED = 70;
+    private int width, height;
 
-    public DrawingPanel() {
+    public DrawingPanel(int width, int height) {
         setTitle("Drawing panel");
-        setSize(WIDTH, HEIGHT);
+        setWidth(width);
+        setHeight(height);
         setVisible(true);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+    }
 
-        /*background = new Background(
-                WIDTH, HEIGHT, ROAD_ANGLE, RAY_SPEED
-        );
+    @Override
+    public int getWidth() {
+        return width;
+    }
 
-        car = new Car(
-                (int) ((WIDTH - CAR_SPEED * ticksFromStart % WIDTH) * Math.cos(ROAD_ANGLE)),
-                (int) (HEIGHT / 2 + (WIDTH - CAR_SPEED * ticksFromStart % WIDTH) * Math.sin(ROAD_ANGLE)),
-                CAR_WIDTH, CAR_HEIGHT, ROAD_ANGLE, WIDTH, HEIGHT
-        );
+    public void setWidth(int width) {
+        this.width = width;
+    }
 
-        foreground = new Foreground(
-                WIDTH, HEIGHT, ROAD_ANGLE
-        );*/
+    @Override
+    public int getHeight() {
+        return height;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+        setSize(width, height);
     }
 
     @Override

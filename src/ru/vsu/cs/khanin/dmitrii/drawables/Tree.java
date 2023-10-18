@@ -9,10 +9,10 @@ public class Tree implements Drawable {
     private int x, y, width, height;
 
     public Tree(int x, int y, int width, int height) {
-        this.x = x;
-        this.y = y;
-        this.width = width;
-        this.height = height;
+        setX(x);
+        setY(y);
+        setWidth(width);
+        setHeight(height);
     }
 
     public int getX() {

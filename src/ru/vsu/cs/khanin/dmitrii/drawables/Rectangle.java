@@ -8,12 +8,16 @@ public class Rectangle implements Drawable {
     private int x, y, width, height;
     private Color color;
 
+    public Rectangle(int x, int y, int width, int height) {
+        this(x, y, width, height, Color.BLACK);
+    }
+
     public Rectangle(int x, int y, int width, int height, Color color) {
-        this.x = x;
-        this.y = y;
-        this.width = width;
-        this.height = height;
-        this.color = color;
+        setX(x);
+        setY(y);
+        setWidth(width);
+        setHeight(height);
+        setColor(color);
     }
 
     public int getX() {

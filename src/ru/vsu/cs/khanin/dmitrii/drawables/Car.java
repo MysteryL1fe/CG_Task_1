@@ -11,6 +11,10 @@ public class Car implements Drawable {
     private int x, y, width, height;
     private double angle;
 
+    public Car(int x, int y, int width, int height) {
+        this(x, y, width, height, 0);
+    }
+
     public Car(int x, int y, int width, int height, double angle) {
         setX(x);
         setY(y);
